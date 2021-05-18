@@ -2,7 +2,7 @@
   <div class="index">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="col-6">
+        <div class="col-8">
           <div class="title">
             <h3 class="h3 text-center">
               Cotizador de envíos
@@ -53,7 +53,7 @@
               </button>
             </form>
           </template>
-          <div class="options">
+          <div class="options"   v-bind:class="{ shadow: this.options.length>0 }">
             <quote-option
               v-for="(option, index) in optionsOrder"
               :key="`option-${index}`"
@@ -71,12 +71,12 @@
 const CP_HOST = 1229;
 const ID_ARTICLE = 431103;
 
-//import QuoteOption from '~/components/QuoteOption.vue'
+import QuoteOption from '~/components/QuoteOption.vue'
 
 export default {
 
   components: {
-    //QuoteOption,
+    QuoteOption,
   },
 
   data(){
@@ -89,10 +89,14 @@ export default {
 
   computed:{
     optionsOrder(){
-      /**
-       * Code
-      */
-      return this.options
+      let array=this.options
+      array.sort(function(a, b) {
+        return a.Total - b.Total;
+      });
+      const titles={Total:"Total",descripcion:"Descripción",PlazoEntrega:"Plazo de entrega"}
+      
+      this.options.length>0 && array.splice(0,0,titles);
+      return array
     },
     txtSubmit(){
       return this.loading ? 'Cotizando...' : 'Cotizar'
@@ -104,7 +108,6 @@ export default {
   },
 
   methods: {
-    
     async init(){
       this.options = []
       this.postalCode = ''
@@ -170,5 +173,13 @@ export default {
   .list{
     padding: 15px;
   }
+  .options{
+    margin-top: 30px;
+  }
+  .shadow{
+    box-shadow: 10px 10px 38px 5px rgba(0,0,0,0.29);
+    -webkit-box-shadow: 10px 10px 38px 5px rgba(0,0,0,0.29);
+    -moz-box-shadow: 10px 10px 38px 5px rgba(0,0,0,0.29);}
+  
 }
 </style>
